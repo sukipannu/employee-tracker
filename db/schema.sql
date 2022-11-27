@@ -1,0 +1,26 @@
+DROP TABLE IF EXISTS employees;
+DROP TABLE IF EXISTS emp_role;
+DROP TABLE IF EXISTS dept;
+
+CREATE TABLE dept (
+  dept_id INTEGER PRIMARY KEY AUTO_INCREMENT,
+  department_name VARCHAR(75) NOT NULL
+);
+
+CREATE TABLE emp_role (
+  role_id INTEGER PRIMARY KEY AUTO_INCREMENT,
+  role_title VARCHAR(100) NOT NULL,
+  department_id INTEGER,
+  role_salary INTEGER NOT NULL,
+FOREIGN KEY (department_id) REFERENCES dept(dept_id) ON DELETE CASCADE
+);
+
+CREATE TABLE employees (
+  emp_id INTEGER PRIMARY KEY AUTO_INCREMENT,
+  first_name VARCHAR(30) NOT NULL,
+  last_name VARCHAR(30) NOT NULL,
+  r_id INTEGER NOT NULL,
+  manager_id INTEGER DEFAULT 1,
+  FOREIGN KEY (r_id) REFERENCES emp_role(role_id) ON DELETE CASCADE,
+  FOREIGN KEY (manager_id) REFERENCES employees(emp_id) ON DELETE CASCADE
+);
