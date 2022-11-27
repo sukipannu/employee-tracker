@@ -152,3 +152,96 @@ function vEmployDept() {
       });
   });
 }
+
+ // ADD ROLE FUNCTION
+ function aRole() {
+  const grabDepartment = new Promise((resolve, reject) => {
+    let grabDeptArr = [];
+    const sql = `SELECT department_name FROM dept`;
+    db.query(sql, (err, rows) => {
+      if (err) {
+        console.log(err.message);
+      }
+      // ROLE FOR LOOP
+      for (let i = 0; i < rows.length; i++) {
+        grabDeptArr.push(Object.values(rows[i])[0]);
+      }
+      resolve(grabDeptArr);
+    });
+  });
+  grabDepartment.then((grabDeptArr) => {
+    inquirer
+      .prompt([
+        {
+          type: "list",
+          name: "departmentId",
+          message: "Please select a department",
+          choices: grabDeptArr,
+          filter: (idInput) => {
+            if (idInput) {
+              return grabDeptArr.indexOf(idInput);
+            }
+          },
+        },
+        {
+          type: "text",
+          name: "titleOfRole",
+          message: "Enter the role you wish to add:",
+          validate: (titleInput) => {
+            if (titleInput) {
+              return true;
+            } else {
+              console.log(
+                "You must enter a title for the role you wish to add."
+              );
+              return false;
+            }
+          },
+        },
+        {
+          type: "number",
+          name: "salaryInputId",
+          message: "Enter the salary of the role you just entered:",
+          validate: (salaryInput) => {
+            if (!salaryInput || salaryInput === NaN) {
+              console.log("");
+              console.log("Please enter a valid numerical and do not format");
+              return false;
+            } else {
+              return true;
+            }
+          },
+          filter: (salaryInput) => {
+            if (!salaryInput || salaryInput === NaN) {
+              return "";
+            } else {
+              return salaryInput;
+            }
+          },
+        },
+      ])
+      .then(({ departmentId, titleOfRole, salaryInputId }) => {
+        const sql = `INSERT INTO emp_role (department_id, role_title, role_salary) VALUES (?,?,?)`;
+        const query = [departmentId + 1, titleOfRole, salaryInputId];
+        db.query(sql, query, (err, rows) => {
+          if (err) {
+            console.log(err.message);
+          }
+          console.log("");
+          console.log("                         Success!");
+          inquirer
+            .prompt({
+              type: "confirm",
+              name: "result",
+              message: "Is everthing correct?",
+            })
+            .then(({ result }) => {
+              if (result) {
+                console.log("");
+                vRoles();
+              } else mainMenu();
+            });
+        });
+      });
+  });
+}
