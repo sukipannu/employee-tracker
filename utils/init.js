@@ -245,3 +245,40 @@ function vEmployDept() {
       });
   });
 }
+
+ // ADD DEPARTMENT FUNCTION
+ function aDept() {
+  inquirer
+    .prompt([
+      {
+        type: "text",
+        name: "deptAdd",
+        message: "Create a new department:",
+      },
+    ])
+    .then(({ deptAdd }) => {
+      const sql = `INSERT INTO dept (department_name) VALUES (?)`;
+      const query = [deptAdd];
+      db.query(sql, query, (err, rows) => {
+        if (err) {
+          console.log(err.message);
+        }
+        console.log("");
+        console.log("Wonderful!");
+        inquirer
+          .prompt({
+            type: "confirm",
+            name: "result",
+            message: "Added result is shown.",
+          })
+          .then(({ result }) => {
+            if (result) {
+              console.log("");
+              vDepts();
+            } else {
+              mainMenu();
+            }
+          });
+      });
+    });
+}
