@@ -356,7 +356,7 @@ function aEmployee() {
         resolve(manIdArr);
       });
     });
-    
+
     // ASYNC PROMISE TO ASK QUESTIONS TO UPDATE DATABASE
     Promise.all([
       grabTheTitle,
@@ -569,3 +569,18 @@ function aEmployee() {
       }
     );
   }
+
+// END FUNCTION WITH TIMER TO SEND YOU TO LAST DIRECTORY
+    function endInit() {
+      console.log("");
+      console.log("Thank you for using this application.");
+      setTimeout(() => {
+        console.log("");
+        console.log("                             Goodbye.");
+      }, 800);
+      setTimeout(() => {
+        process.exit(1);
+      }, 1500);
+    }
+    
+    module.exports = init;
